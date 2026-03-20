@@ -2,6 +2,12 @@
     flights: .word 45, 60, 38, 72, 55, 68, 50
     n:       .word 7
 
+    msg_total: .asciz "Total: "
+    msg_avg:   .asciz "\nAverage: "
+    msg_min:   .asciz "\nMinimum: "
+    msg_cnt:   .asciz "\nBelow Average Count: "
+    newline:   .asciz "\n"
+
 .text
 main:
     la a0, flights      # a0 = array address
@@ -10,7 +16,49 @@ main:
     
     
     # a0 = total sum, a1 = average, a2 = min value, a3 = count below average
-    li a7, 10           # Exit syscall
+
+    # Print Total
+    la t0, msg_total
+    mv a0, t0
+    li a7, 4
+    ecall
+
+    mv a0, a0           # total already in a0
+    li a7, 1
+    ecall
+
+    # Print Average
+    la t0, msg_avg
+    mv a0, t0
+    li a7, 4
+    ecall
+
+    mv a0, a1
+    li a7, 1
+    ecall
+
+    # Print Minimum
+    la t0, msg_min
+    mv a0, t0
+    li a7, 4
+    ecall
+
+    mv a0, a2
+    li a7, 1
+    ecall
+
+    # Print Count Below Average
+    la t0, msg_cnt
+    mv a0, t0
+    li a7, 4
+    ecall
+
+    mv a0, a3
+    li a7, 1
+    ecall
+
+    # Exit syscall
+    li a7, 10
     ecall
 
 

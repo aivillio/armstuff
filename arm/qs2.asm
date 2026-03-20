@@ -2,6 +2,11 @@
     balances: .word 1000, 2500, 1500, 4000, 3000
     size:     .word 5
 
+    msg_total: .asciz "Total Balance: "
+    msg_max:   .asciz "\nMax Balance: "
+    msg_arr:   .asciz "\nUpdated Balances:\n"
+    newline:   .asciz "\n"
+
 .text
 main:
     la t0, balances
@@ -52,5 +57,50 @@ bonus_loop:
 end_b:
     # Final Results:
     # t3 = Total, t4 = Max, Array 'balances' contains updated values
+
+    # Print Total
+    la a0, msg_total
+    li a7, 4
+    ecall
+
+    mv a0, t3
+    li a7, 1
+    ecall
+
+    # Print Max
+    la a0, msg_max
+    li a7, 4
+    ecall
+
+    mv a0, t4
+    li a7, 1
+    ecall
+
+    # Print updated balances
+    la a0, msg_arr
+    li a7, 4
+    ecall
+
+    li t2, 0            # Reuse index for printing
+
+print_loop:
+    bge t2, t1, exit
+    
+    slli t5, t2, 2
+    add t6, t0, t5
+    lw a0, 0(t6)
+    
+    li a7, 1
+    ecall
+
+    # Print newline
+    la a0, newline
+    li a7, 4
+    ecall
+
+    addi t2, t2, 1
+    j print_loop
+
+exit:
     li a7, 10
     ecall
